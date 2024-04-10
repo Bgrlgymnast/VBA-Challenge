@@ -1,0 +1,143 @@
+Sub StockMarket():
+
+' Loop through all worksheets
+    For Each ws In Worksheets
+        ws.Activate
+
+'Add Variables
+Dim lastRow As Long
+Dim Ticker As String
+Dim TickerTotal As Double
+Dim SummaryTableRow As Integer
+Dim i As Long
+Dim Openprice As Double
+Dim Closeprice As Double
+Dim YearlyChange As Double
+Dim PercentChange As Double
+Dim Volume As Double
+Dim SummaryTable As Long
+Dim GreatestIncrease As Double
+Dim GreatestDecrease As Double
+Dim GreatestTotalVolume As Double
+
+' Add Counters
+    Volume = 0
+    SummaryTable = 2
+     
+
+' Find lastRow in worksheet
+        lastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row
+
+' Create Column headers
+        ws.Cells(1, "I").Value = "Ticker"
+        ws.Cells(1, "J").Value = "Yearly Change"
+        ws.Cells(1, "K").Value = "Percent Change"
+        ws.Cells(1, "L").Value = "Total Stock Volume"
+
+' Add Greatest & Increase, Greatest % Decrease and Greatest total volume headers
+        ws.Cells(1, "P").Value = "Ticker"
+        ws.Cells(1, "Q").Value = "Value"
+        ws.Cells(2, "O").Value = "Greatest % Increase"
+        ws.Cells(3, "O").Value = "Greatest % Decrease"
+        ws.Cells(4, "O").Value = "Greatest Total Volume"
+
+' Capture lastRow Loop
+        For i = 2 To lastRow
+
+' Ticker
+            If ws.Cells(i, "A").Value <> ws.Cells(i - 1, "A").Value Then
+
+'Set Ticker Name
+                Ticker = ws.Cells(i, "A").Value
+                ws.Cells(ws.Cells(i, "I").End(xlUp).Row + 1, "I").Value = Ticker
+                
+' Set Open Price
+                Openprice = ws.Cells(i, "C").Value
+            
+            ElseIf ws.Cells(i, "A").Value <> ws.Cells(i + 1, "A").Value Then
+
+'Set Yearly Change
+                YearlyChange = ws.Cells(i, "F").Value - Openprice
+                ws.Cells(ws.Cells(i, "J").End(xlUp).Row + 1, "J").Value = YearlyChange
+
+'Set Percent change
+                PercentChange = YearlyChange / Openprice
+                ws.Cells(ws.Cells(i, "K").End(xlUp).Row + 1, "K").Value = PercentChange
+
+' Convert "K" to percent
+                ws.Range("K" & SummaryTable).NumberFormat = "0.00%"
+            
+            End If
+    
+'Set Volume
+            If ws.Cells(i, "A").Value = ws.Cells(SummaryTable, "I").Value Then
+                Volume = Volume + ws.Cells(i, "G").Value
+            
+            ElseIf ws.Cells(i, "A").Value <> ws.Cells(i + 1, "I").Value Then
+                ws.Cells(ws.Cells(i, "L").End(xlUp).Row + 1, "L").Value = Volume
+'Reset Volume
+                Volume = 0
+                SummaryTable = SummaryTable + 1
+                
+'Reset Open Price
+                Openprice = ws.Cells(i, "C").Value
+            End If
+'Highlighting postitive numbers with Green and negative numbers with Red
+
+'Positive Green for Yearly Chage
+            If ws.Range("J" & SummaryTable).Value >= 0 Then
+                ws.Range("J" & SummaryTable).Interior.Color = vbGreen
+
+'Negative Red for Yearly Change
+            Else
+                ws.Range("J" & SummaryTable).Interior.Color = vbRed
+        End If
+
+'Positive Green for Percent Chage
+            If ws.Range("K" & SummaryTable).Value >= 0 Then
+                ws.Range("K" & SummaryTable).Interior.Color = vbGreen
+
+'Negative Red for Yearly Change
+            Else
+                ws.Range("K" & SummaryTable).Interior.Color = vbRed
+        End If
+
+    Next i
+
+'Add functionality to your script to return the stock with the "Greatest % increase", "Greatest % decrease", and "Greatest total volume"
+        GreatestIncrease = Application.WorksheetFunction.Max(ws.Columns("K"))
+        GreatestDecrease = Application.WorksheetFunction.Min(ws.Columns("K"))
+        GreatestTotalVolume = Application.WorksheetFunction.Max(ws.Columns("L"))
+
+'Set "Greatest % increase", "Greatest % decrease", and "Greatest total volume"
+        ws.Range("Q2").Value = GreatestIncrease
+        ws.Range("Q3").Value = GreatestDecrease
+        ws.Range("Q4").Value = GreatestTotalVolume
+        
+        
+'Reminder use XLOOKUP(Q2,K:K,I:I)
+        Dim TickerGreatestIncrease As String
+        Dim TickerGreatestDecrease As String
+        Dim TickerGreatestTotalVolume As String
+        
+' Greatest Percent increase
+        TickerGreatestIncrease = Application.WorksheetFunction.XLookup(GreatestIncrease, ws.Columns("K"), ws.Columns("I"))
+        ws.Range("P2").Value = TickerGreatestIncrease
+ 
+ ' Greatest Percent Decrease
+        TickerGreatestDecrease = Application.WorksheetFunction.XLookup(GreatestDecrease, ws.Columns("K"), ws.Columns("I"))
+        ws.Range("P3").Value = TickerGreatestDecrease
+  
+  'Greatest Total Volume
+        TickerGreatestTotalVolume = Application.WorksheetFunction.XLookup(GreatestTotalVolume, ws.Columns("L"), ws.Columns("I"))
+         ws.Range("P4").Value = TickerGreatestTotalVolume
+         
+         ws.Range("Q4").NumberFormat = "General"
+        
+'Auto fit cells
+         ws.Columns("A:Q").AutoFit
+         
+    Next ws
+
+End Sub
+
