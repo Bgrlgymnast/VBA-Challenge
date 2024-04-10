@@ -4,7 +4,7 @@
 ![alt text](https://github.com/Bgrlgymnast/VBA-challenge/blob/48e877e1b7b2f717be61aebd02ddf5e5572a2e82/Starter_Code/Images/stockmarket.jpg)
 
 ## Before You Begin
-Create a new repository for this project called "VBA-challenge". **Do not add this assignment to an existing repository.**
+Create a new repository for this project called "**VBA-challenge**". **Do not add this assignment to an existing repository.**
 
 Inside the new repository that you just created, add any VBA files that you use for this assignment. These will be the main scripts to run for each analysis.
 
@@ -34,7 +34,7 @@ Add functionality to your script to return the stock with the "Greatest % increa
 Make sure to use conditional formatting that will highlight positive change in green and negative change in red.
 
 ## Other Considerations
-Use the sheet alphabetical_testing.xlsx while developing your code. This dataset is smaller and will allow you to test faster. Your code should run on this file in under 3 to 5 minutes.
+Use the sheet "**alphabetical_testing.xlsx**" while developing your code. This dataset is smaller and will allow you to test faster. Your code should run on this file in under 3 to 5 minutes.
 
 Make sure that the script acts the same on every sheet. The joy of VBA is that it takes the tediousness out of repetitive tasks with the click of a button.
 
